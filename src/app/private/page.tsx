@@ -1,12 +1,13 @@
-import { isAuthenticated } from "@/lib/auth";
+"use client";
+import { useAuth } from "@/lib/useAuth";
 import { redirect } from "next/navigation";
 
 const Private: React.FC = () => {
-  const isAuth = isAuthenticated;
+  const { auth } = useAuth();
 
-  //   if (!isAuth) {
-  //     redirect("/");
-  //   }
+  if (!auth) {
+    redirect("/");
+  }
 
   return <div>Private Page</div>;
 };

@@ -1,1 +1,1 @@
-type User = any;
+type User = { name: string; email: string; accessToken: string };
