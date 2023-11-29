@@ -14,9 +14,9 @@ For navigation security, both middleware and redirects are employed in the priva
 
 ## Project Structure
 
-- **/pages**
+- **pages**
 
-  - **index.tsx**: Main home page for user registration or login.
+  - **page.tsx**: Main home page for user registration or login.
   - **public.tsx**: Public page accessible to anyone.
   - **private.tsx**: Private page accessible only to logged-in users.
 
