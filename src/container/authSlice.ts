@@ -1,25 +1,29 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "@/lib/axios";
-
+import axios from "axios";
 interface AuthState {
-  user: User | null;
+  data: User | null;
   loading: "idle" | "pending";
   error: string | null;
 }
 
 const initialState: AuthState = {
-  user: null,
+  data: null,
   loading: "idle",
   error: null,
 };
 
-export const fetchUserInfo = createAsyncThunk(
-  "user/fecthUserinfo",
-  async ({ email, psw }: { email: string; psw: string }) => {
+interface LoginPayload {
+  email: string;
+  psw: string;
+}
+
+export const login = createAsyncThunk<User | null, LoginPayload>(
+  "user/login",
+  async ({ email, psw }) => {
     try {
       const result = await axios.post(
-        "/login",
-        JSON.stringify({ mail: email, password: psw }),
+        `${process.env.NEXT_PUBLIC_BASE_API}/login`,
+        JSON.stringify({ email: email, psw: psw }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -47,31 +51,36 @@ const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
-    setCredentials(state: AuthState, action: PayloadAction<User>) {
-      state.user = action.payload;
+    setCredentials(state: AuthState, action: PayloadAction<User | null>) {
+      state.data = action.payload;
+    },
+
+    updateToken(state: AuthState, action: PayloadAction<string>) {
+      const data = state.data;
+      data ? (data.accessToken = action.payload) : null;
     },
 
     logOut(state: AuthState) {
-      state.user = null;
+      state.data = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUserInfo.pending, (state) => {
+      .addCase(login.pending, (state) => {
         state.loading = "pending";
         state.error = null;
       })
-      .addCase(fetchUserInfo.fulfilled, (state, action) => {
+      .addCase(login.fulfilled, (state, action) => {
         state.loading = "idle";
-        state.user = action.payload;
+        state.data = action.payload;
       })
-      .addCase(fetchUserInfo.rejected, (state, action) => {
+      .addCase(login.rejected, (state, action) => {
         state.loading = "idle";
         state.error = action.error.message ?? "Unknown error";
       });
   },
 });
 
-export const { setCredentials, logOut } = authSlice.actions;
+export const { setCredentials, updateToken, logOut } = authSlice.actions;
 
 export default authSlice;

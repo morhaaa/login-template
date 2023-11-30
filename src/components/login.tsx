@@ -1,11 +1,12 @@
 "use client";
-import { AuthContext } from "@/context/AuthProvider";
-import axios from "@/lib/axios";
-import { useRef, useState, useEffect, useContext } from "react";
+import { login } from "@/container/authSlice";
+import { AppDispatch } from "@/container/store";
+import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 const Login: React.FC = () => {
-  const { setAuth } = useContext(AuthContext);
+  const dispatch: AppDispatch = useDispatch();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const pswRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -58,19 +59,7 @@ const Login: React.FC = () => {
 
     if (isValidMail && isValidPsw) {
       try {
-        const response = await axios.post(
-          "/login",
-          JSON.stringify({ mail: userMail, password: psw }),
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
-        );
-
-        const accessToken =
-          response?.data?.accessToken ?? "1as3e-wr52s-3gy2f-4523x";
-        const role = response?.data?.role ?? "user";
-        setAuth({ userMail, role, accessToken });
+        dispatch(login({ email: userMail, psw: psw }));
       } catch (e) {
         toast.error("error");
       }
@@ -78,7 +67,6 @@ const Login: React.FC = () => {
   };
 
   return (
-    <section className="flex items-center justify-center ">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded shadow-md w-96"
@@ -146,7 +134,6 @@ const Login: React.FC = () => {
           Submit
         </button>
       </form>
-    </section>
   );
 };
 

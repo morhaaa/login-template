@@ -1,11 +1,9 @@
-import Login from "@/components/login";
-import Register from "@/components/register";
+import Auth from "@/components/authentication";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      {/* <Register /> */}
-      <Login />
+    <main className="">
+      <Auth />
     </main>
   );
 }

@@ -1,4 +1,4 @@
-import { isAuthenticated } from "./lib/useAuth";
+import { isAuthenticated } from "./lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 const protectedRoutes = ["/private"];
