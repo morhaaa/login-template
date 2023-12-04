@@ -3,7 +3,11 @@ import axios from "axios";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-const Register: React.FC = () => {
+interface RegisterProps {
+  showLoginForm: () => void;
+}
+
+const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const pswRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -92,10 +96,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-8 rounded shadow-md w-96"
-    >
+    <form onSubmit={handleSubmit} className="w-96">
       <h1 className="text-2xl font-bold mb-4">Register</h1>
 
       <div className="mb-4">
@@ -185,6 +186,16 @@ const Register: React.FC = () => {
       >
         Submit
       </button>
+
+      <div className="flex gap-1 w-full items-center justify-center pt-5">
+        <p className="text-sm text-center ">Have an account?</p>
+        <p
+          onClick={showLoginForm}
+          className="text-sm text-center text-blue-500 font-medium cursor-pointer hover:underline"
+        >
+          Log in
+        </p>
+      </div>
     </form>
   );
 };

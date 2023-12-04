@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import toast from "react-hot-toast";
 interface AuthState {
   data: User | null;
   loading: "idle" | "pending";
@@ -40,7 +41,8 @@ export const login = createAsyncThunk<User | null, LoginPayload>(
       } else {
         throw new Error("Invalid response format");
       }
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.message);
       console.error("Error fetching user info:", error);
       throw new Error("Failed to fetch user info");
     }
